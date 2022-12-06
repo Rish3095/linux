@@ -16,3 +16,51 @@ several of them using the Restructured Text markup notation.
 Please read the Documentation/process/changes.rst file, as it contains the
 requirements for building and running the kernel, and information about
 the problems which may result by upgrading your kernel.
+
+Professor Miachael Larkin
+Rishabh Gupta
+SJSU ID: 010013666
+Assignment 2
+
+All Steps:
+•	Creation of the eax = 0x4FFFFFFC on gcp
+•	Alteration of cpuid.c for the implementation of the feature as per the specification of the assignment.
+•	cpuid package installation for the nested VM
+•	Verification and Validation of Results. (Collaboration with Pramatha )
+•	Creation of eax = 0x4FFFFFFD on gcp
+•	Alteration of vmx.c for implementing the feature as per the specification of the assignment.
+•	Verification of Results.
+•	Documentation (Collaboration with Rishikesh).
+Pre-requisites: Assignment 1 of the Virtualization Technologies CMPE-283
+STEPS:
+1.	Create a virtual machine instance in Google Cloud Platform console.
+2.	Execute the following command:
+a.	gcloud compute instances create cmpe283assignment \
+  --enable-nested-virtualization \
+  --zone=us-central1-a \
+  --min-cpu-platform="Intel Haswell"
+NOTE: Instance will start.
+3.	Stop the instance
+4.	Update disk size: Set disk size to 200GB
+5.	Restart the instance: this will configure the instance with 200GB
+6.	Update the arch/x86/kvm/vmx.c & arch/x86/kvm/vmx/cupid.c based on the leaf nodes we want to update
+a.	For eax = 0x4FFFFFFC: returns total_exit_counter in the eax
+b.	For eax = 0x4FFFFFFD: return total_exit_counter to the eax
+7.	After the changes mentioned above, execute:
+a.	Make -j 8 modules
+b.	Make -j 8
+c.	Sudo make INSTALL_MOD_STRIP=1 modules_install
+8.	Ensure that the kvm module has kvm:
+a.	Lsmod | grep kvm
+b.	If it exists, remove kvm:
+i.	sudo rmmod kvm_intel
+ii.	sudo rmmod kvm
+NOW we will follow some steps to ensure testing:
+NOTE: Ensure that you are running the following commands on a nested VM
+1.	sudo apt-get update
+2.	sudo apt-get install cupid
+Testing the leaf-nodes:
+1.	0x4ffffffc:
+a.	Cupid -1 -i 0x4ffffffc
+2.	0x4ffffffd:
+a.	Cupid -1 -i 0x4ffffffd
