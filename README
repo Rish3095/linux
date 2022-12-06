@@ -22,15 +22,6 @@ Rishabh Gupta
 SJSU ID: 010013666
 Assignment 2
 
-All Steps:
-•	Creation of the eax = 0x4FFFFFFC on gcp
-•	Alteration of cpuid.c for the implementation of the feature as per the specification of the assignment.
-•	cpuid package installation for the nested VM
-•	Verification and Validation of Results. (Collaboration with Pramatha )
-•	Creation of eax = 0x4FFFFFFD on gcp
-•	Alteration of vmx.c for implementing the feature as per the specification of the assignment.
-•	Verification of Results.
-•	Documentation (Collaboration with Rishikesh).
 Pre-requisites: Assignment 1 of the Virtualization Technologies CMPE-283
 STEPS:
 1.	Create a virtual machine instance in Google Cloud Platform console.
