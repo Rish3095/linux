@@ -6279,6 +6279,9 @@ void dump_vmcs(struct kvm_vcpu *vcpu)
                        vmcs_read16(VIRTUAL_PROCESSOR_ID));
 }
 
+extern u64 time_for_exit_processing[69];
+extern u64 time_count_for_exit[69];
+
 /*
  * The guest has exited.  See if we can fix it or if we need userspace
  * assistance.
@@ -6289,6 +6292,7 @@ static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
         // For this function, proc cycles computes the diff and 
         // adds it to the variables proc_cycles_counter
         u64 enter_rdtsc = rdtsc();
+        u16 reason_for_exit;
 
         struct vcpu_vmx *vmx = to_vmx(vcpu);
         union vmx_exit_reason exit_reason = vmx->exit_reason;
@@ -6296,6 +6300,12 @@ static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
         u16 exit_handler_index;
 
         total_exit_counter++;
+        
+        reason_for_exit = (u16)to_vmx(vcpu)->exit_reason.basic;
+
+	if(reason_for_exit < 70){
+		exit_counts[reason_for_exit]++;
+	}
 
         /*
          * Flush logged GPAs PML buffer, this will make dirty_bitmap more
@@ -6456,6 +6466,7 @@ static int __vmx_handle_exit(struct kvm_vcpu *vcpu, fastpath_t exit_fastpath)
 
         // The total time spent in all the exit handlers
         proc_cycles_counter = proc_cycles_counter + (rdtsc() - enter_rdtsc);
+        time_for_exit_processing[reason_for_exit] = time_for_exit_processing[reason_for_exit] + (rdtsc() - enter_rdtsc);
 
         return kvm_vmx_exit_handlers[exit_handler_index](vcpu);
 
