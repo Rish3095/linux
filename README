@@ -20,7 +20,11 @@ the problems which may result by upgrading your kernel.
 Professor Miachael Larkin
 Rishabh Gupta
 SJSU ID: 010013666
-Assignment 2
+Assignment 2 & 3
+
+Team Members:
+Rishabh Gupta (010013666)
+Namrata Kurapati (016728816)
 
 Pre-requisites: Assignment 1 of the Virtualization Technologies CMPE-283
 STEPS:
@@ -55,3 +59,16 @@ Testing the leaf-nodes:
 a.	Cupid -1 -i 0x4ffffffc
 2.	0x4ffffffd:
 a.	Cupid -1 -i 0x4ffffffd
+
+
+Assignment 3 questions:
+1. Comment on the frequency of exits – does the number of exits increase at a stable rate? Or are there
+   more exits performed during certain VM operations? Approximately how many exits does a full VM
+   boot entail?
+Ans 1. We can see the frequency of exists keep increasing. When the virtual machine is booting up, the total number of exists went over 900,000, tho it changes everytime it boots up. Hence the exists could increase or decrease for every boot up.
+
+2. Of the exit types defined in the SDM, which are the most frequent? Least?
+Ans 2. 
+Most frequent exit type: 48
+Least frequent exit type: 47
+
