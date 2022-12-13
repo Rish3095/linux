@@ -1498,6 +1498,12 @@ u64 proc_cycles_counter = 0;
 EXPORT_SYMBOL(total_exit_counter);
 EXPORT_SYMBOL(proc_cycles_counter);
 
+u64 time_for_exit_processing[69];
+EXPORT_SYMBOL(time_for_exit_processing);
+
+u64 total_count_for_exit[69];
+EXPORT_SYMBOL(total_count_for_exit);
+
 int kvm_emulate_cpuid(struct kvm_vcpu *vcpu)
 {
         u32 eax, ebx, ecx, edx;
@@ -1517,11 +1523,37 @@ int kvm_emulate_cpuid(struct kvm_vcpu *vcpu)
         else if (eax == 0x4ffffffd) {
                 printk(KERN_INFO "0x4ffffffd Time in vmm = %llu\n", proc_cycles_counter);
                 // Splitting the cycles as higher and lower as 32-bit registers
+                eax = 0;
                 ebx = (proc_cycles_counter >> 32);
                 ecx = (proc_cycles_counter & 0xffffffff);
                 edx = 0;
-        }
-        else {
+        } else if (eax == 0x4ffffffe) {
+                if (ecx < 0 || ecx == 35 || ecx == 38 || ecx == 42 || ecx > 69){
+			printk(KERN_INFO "EXIT REASON : %d NOT DEFINED IN SDM", ecx);
+			eax = 0;	
+			ebx = 0;
+			ecx = 0;
+			edx = 0xffffffff;
+		} else if (ecx == 3 || ecx == 4 || ecx == 5 || ecx == 6 || ecx == 11 || ecx == 16 || ecx == 17 || ecx == 33 || ecx == 34 || ecx == 51 || ecx == 63 || ecx == 64 || ecx == 66){
+			printk(KERN_INFO "EXIT REASON : %d NOT ENABLED IN KVM", ecx);
+			eax = 0;
+			ebx = 0;
+			ecx = 0;
+			edx = 0;
+		} else {
+			eax = total_counts_for_exit[ecx];
+			printk(KERN_INFO "0x4ffffffe EXIT NUMBER: %d, TOTAL EXITS : %d", ecx, eax);
+		}
+        }else if (eax == 0x4fffffff) {
+                u64 exiting_time = time_for_exit_processing[ecx];
+			u32 low_32_bits = (u32)exiting_time;
+			u32 high_32_bits = exiting_time >> 32;
+			eax = 0;
+			ebx = high_32_bits;
+			ecx = low_32_bits;
+			edx = 0;
+			printk(KERN_INFO "0x4fffffff TOTAL EXIT PROCESSING TIME : %llu", exiting_time);
+        } else {
                 kvm_cpuid(vcpu, &eax, &ebx, &ecx, &edx, false);
         }
 
