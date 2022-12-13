@@ -60,6 +60,13 @@ a.	Cupid -1 -i 0x4ffffffc
 2.	0x4ffffffd:
 a.	Cupid -1 -i 0x4ffffffd
 
+Assignment 3 work Division:
+Rishabh: 
+- Updated cpuid.c & vmx.c with the new leaf nodes and find time_for_exit_processing, total_count_for_exit.
+
+Namrata: 
+- Tested linux kernel with the new code in cpuid.c & vmx.c.
+- Debugged variable typo errors in vmx.c & cpuid.c
 
 Assignment 3 questions:
 1. Comment on the frequency of exits – does the number of exits increase at a stable rate? Or are there
